@@ -8,7 +8,7 @@ async function handler(req, res) {
 
         // const { title, image, address, description } = data;
 
-        const client = MongoClient.connect();
+        const client = await MongoClient.connect();
         const db = client.db();
 
         const meetupsCollection = db.collection('meetups');
@@ -16,7 +16,7 @@ async function handler(req, res) {
         client.close(); //close database connection with mongodb
 
         //send respond
-        res.status(201), json({ message: 'Meetup inserted!' });
+        res.status(201).json({ message: 'Meetup inserted!' });
     }
 }
 
