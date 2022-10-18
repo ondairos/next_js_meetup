@@ -23,7 +23,7 @@ function HomePage(props) {
 //special reserved function for getting props during the build phase -faster than getServerSideProps
 export async function getStaticProps() {
     //fetch data from API/database
-    const client = await MongoClient.connect();
+    const client = await MongoClient.connect()
     const db = client.db();
 
     const meetupsCollection = db.collection('meetups');

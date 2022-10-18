@@ -1,56 +1,61 @@
+import { MongoClient, ObjectId } from "mongodb";
 //meetup ID dynamic pages
 import MeetupDetail from "../../components/meetups/MeetupDetail";
 
-const MeetupDetails = () => {
+const MeetupDetails = (props) => {
     return (
         <MeetupDetail
-            image="https://images.unsplash.com/photo-1665899689931-6638f06268b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1208&q=80"
-            title='The Second Meetup'
-            address='Street 12, City'
-            description='The meetup description'
+            image={props.meetupData.image}
+            title={props.meetupData.title}
+            address={props.meetupData.address}
+            description={props.meetupData.description}
         >
         </MeetupDetail>
     );
 }
 
 export async function getStaticPaths() {
+    const client = await MongoClient.connect()
+    const db = client.db();
+
+    const meetupsCollection = db.collection('meetups');
+    const meetups = await meetupsCollection.find({}, { _id: 1 }).toArray();//find only the id
+    client.close();
+
     return {
         fallback: false, //allow to pregenerate some pages 
-        paths: [
-            {
-                params: {
-                    meetupId: 'm1'
-                },
-            },
-            {
-                params: {
-                    meetupId: 'm2'
-                },
-            },
-            {
-                params: {
-                    meetupId: 'm3'
-                },
-            },
-        ],
+        paths: meetups.map(meetup => ({
+            params: { meetupId: meetup._id.toString() },
+        })),
+
     };
 }
+
+
 
 export async function getStaticProps(context) {
     //fetch data for a single meetup
     const meetupId = context.params.meetupId;
-    console.log(meetupId);
+
+    const client = await MongoClient.connect()
+    const db = client.db();
+
+    const meetupsCollection = db.collection('meetups');
+
+    const selectedMeetup = await meetupsCollection.findOne({ _id: ObjectId(meetupId) }); //find one meetup
+    client.close();
 
     return {
         props: {
             meetupData: {
-                image: "https://images.unsplash.com/photo-1665899689931-6638f06268b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1208&q=80",
-                id: meetupId,
-                address: 'Street 12, City',
-                description: 'The meetup description',
+                id: selectedMeetup._id.toString(),
+                title: selectedMeetup.title,
+                address: selectedMeetup.address,
+                image: selectedMeetup.image,
+                description: selectedMeetup.description,
             },
         },
-    }
+    };
 }
 
 export default MeetupDetails
