@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+/pages/api/new-meetup.js
+pages/api/new-meetup.js
 
 # testing
 /coverage
