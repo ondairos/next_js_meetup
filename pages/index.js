@@ -35,13 +35,27 @@ function HomePage(props) {
     )
 }
 
-//special reserved function for getting props during the build phase
+// export async function getServerSideProps(context) {
+//     const req = context.req; //we need for eg: authentication
+//     const res = context.res;
+//     //fetch data from api/filesystem/database
+//     return {
+//         props: {
+//             meetups: DUMMY_MEETUPS
+//         }
+//     }
+// }
+
+
+//special reserved function for getting props during the build phase -faster than getServerSideProps
 export async function getStaticProps() {
     //fetch data from API/database
     return {
         props: {
             meetups: DUMMY_MEETUPS
-        }
+        },
+        //incremental static generation
+        revalidate: 10
     };
 }
 
