@@ -1,10 +1,20 @@
+import Head from 'next/head';
 import { MongoClient } from 'mongodb';
 import MeetupList from '../components/meetups/MeetupList';
+import { Fragment } from 'react';
 
 function HomePage(props) {
     return (
-        <MeetupList meetups={props.meetups}>
-        </MeetupList>
+        <Fragment>
+            <Head>
+                <title>React Meetups Meetups</title>
+                <meta name='description' content='Broswe a huge list of highly active React Meetups!'></meta>
+            </Head>
+            <MeetupList meetups={props.meetups}>
+
+            </MeetupList>
+        </Fragment>
+
     )
 }
 
@@ -21,6 +31,7 @@ function HomePage(props) {
 
 
 //special reserved function for getting props during the build phase -faster than getServerSideProps
+
 export async function getStaticProps() {
     //fetch data from API/database
     const client = await MongoClient.connect()
