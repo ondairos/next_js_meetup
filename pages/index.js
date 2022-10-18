@@ -31,10 +31,8 @@ const DUMMY_MEETUPS = [
 
 const HomePage = () => {
     return (
-
         <MeetupList meetups={DUMMY_MEETUPS}>
         </MeetupList>
-
     )
 }
 
